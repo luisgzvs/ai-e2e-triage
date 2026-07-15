@@ -284,6 +284,155 @@
         </div>
       </section>
 
+      <!-- CHALLENGE 5: CART PRICE CALCULATOR -->
+      <section class="card" id="calculator-section" data-testid="challenge-calculator" aria-labelledby="calculator-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 5</span>
+          <h2 id="calculator-title">Cart Price Calculator</h2>
+          <p>Compute order totals with quantities, discounts, and tax rates.</p>
+        </div>
+        <div class="card-body">
+          <form id="calculator-form" data-testid="calculator-form" autocomplete="off" novalidate>
+            <div class="form-group">
+              <label for="calc-price">Unit Price ($)</label>
+              <input type="number" id="calc-price" data-testid="calc-price-input" value="100" min="0" required>
+            </div>
+            <div class="form-group">
+              <label for="calc-quantity">Quantity</label>
+              <input type="number" id="calc-quantity" data-testid="calc-quantity-input" value="1" min="1" required>
+            </div>
+            <div class="form-group">
+              <label for="calc-discount">Discount (%)</label>
+              <input type="number" id="calc-discount" data-testid="calc-discount-input" value="0" min="0" max="100" required>
+            </div>
+            <div class="form-group">
+              <label for="calc-tax">Tax (%)</label>
+              <input type="number" id="calc-tax" data-testid="calc-tax-input" value="0" min="0" required>
+            </div>
+            <button type="submit" id="calc-submit" data-testid="calc-submit-btn" class="btn btn-primary">Calculate Total</button>
+          </form>
+          <div id="calc-summary" class="summary-box hidden" data-testid="calc-summary-box">
+            <p>Subtotal: <strong data-testid="calc-subtotal">$0.00</strong></p>
+            <p>Discount: <strong data-testid="calc-discount-amount">$0.00</strong></p>
+            <p>Tax: <strong data-testid="calc-tax-amount">$0.00</strong></p>
+            <hr>
+            <p>Total: <strong data-testid="calc-total">$0.00</strong></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 6: PASSWORD STRENGTH METER -->
+      <section class="card" id="password-strength-section" data-testid="challenge-password-strength" aria-labelledby="pwd-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 6</span>
+          <h2 id="pwd-title">Password Strength Meter</h2>
+          <p>Analyze input patterns and length constraints on password strength evaluations.</p>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="strength-password">Password</label>
+            <input type="password" id="strength-password" data-testid="strength-password-input" placeholder="Type password...">
+          </div>
+          <div class="strength-meter" data-testid="strength-meter-container">
+            <div class="strength-bar-bg">
+              <div id="strength-bar" class="strength-bar weak" data-testid="strength-bar"></div>
+            </div>
+            <p class="strength-label">Strength: <span id="strength-text" data-testid="strength-text" class="weak-text">Weak</span></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 7: TO-DO PLANNER -->
+      <section class="card" id="todo-section" data-testid="challenge-todo" aria-labelledby="todo-card-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 7</span>
+          <h2 id="todo-card-title">To-Do Planner</h2>
+          <p>Add and complete tasks, and check cleanup operations.</p>
+        </div>
+        <div class="card-body">
+          <form id="todo-form" data-testid="todo-form" autocomplete="off" novalidate>
+            <div class="todo-input-group">
+              <input type="text" id="todo-input" data-testid="todo-input" placeholder="Add new task..." required>
+              <button type="submit" id="todo-add" data-testid="todo-add-btn" class="btn btn-accent btn-sm">Add</button>
+            </div>
+          </form>
+          <ul id="todo-list" class="todo-list" data-testid="todo-list">
+            <!-- Dynamic items -->
+          </ul>
+          <div class="todo-footer">
+            <button id="todo-clear-completed" data-testid="todo-clear-btn" class="btn btn-secondary btn-sm">Clear Completed</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 8: DATE RANGE VALIDATOR -->
+      <section class="card" id="date-section" data-testid="challenge-date" aria-labelledby="date-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 8</span>
+          <h2 id="date-title">Date Range Validator</h2>
+          <p>Verify temporal validations across start and end boundaries.</p>
+        </div>
+        <div class="card-body">
+          <form id="date-form" data-testid="date-form" novalidate>
+            <div class="form-group">
+              <label for="date-start">Start Date</label>
+              <input type="date" id="date-start" data-testid="date-start-input" required>
+            </div>
+            <div class="form-group">
+              <label for="date-end">End Date</label>
+              <input type="date" id="date-end" data-testid="date-end-input" required>
+            </div>
+          </form>
+          <div id="date-error" class="error-message hidden" data-testid="date-error-message">
+            End date must be on or after start date.
+          </div>
+          <div id="date-success" class="success-message hidden" data-testid="date-success-message">
+            Date range is valid.
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 9: FEEDBACK WIZARD -->
+      <section class="card" id="wizard-section" data-testid="challenge-wizard" aria-labelledby="wizard-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 9</span>
+          <h2 id="wizard-title">Feedback Wizard</h2>
+          <p>Navigate multi-step components and verify dropdown submissions.</p>
+        </div>
+        <div class="card-body">
+          <!-- Step 1 -->
+          <div id="wizard-step-1" class="wizard-step" data-testid="wizard-step-1">
+            <div class="form-group">
+              <label for="wizard-category">Feedback Category</label>
+              <select id="wizard-category" data-testid="wizard-category-select">
+                <option value="billing">Billing</option>
+                <option value="technical">Technical Support</option>
+                <option value="general">General Feedback</option>
+              </select>
+            </div>
+            <button id="wizard-next" data-testid="wizard-next-btn" class="btn btn-primary">Next Step</button>
+          </div>
+          <!-- Step 2 -->
+          <div id="wizard-step-2" class="wizard-step hidden" data-testid="wizard-step-2">
+            <div class="form-group">
+              <label for="wizard-comments">Comments</label>
+              <textarea id="wizard-comments" data-testid="wizard-comments-input" rows="3" placeholder="Tell us more..."></textarea>
+            </div>
+            <div class="wizard-actions">
+              <button id="wizard-back" data-testid="wizard-back-btn" class="btn btn-secondary btn-sm">Back</button>
+              <button id="wizard-submit" data-testid="wizard-submit-btn" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+          <!-- Success State -->
+          <div id="wizard-success" class="success-state hidden" data-testid="wizard-success-msg">
+            <div class="success-icon">✓</div>
+            <h3>Feedback Received!</h3>
+            <p id="wizard-summary" data-testid="wizard-summary-text">Thank you for contacting category: Billing</p>
+            <button id="wizard-reset" data-testid="wizard-reset-btn" class="btn btn-secondary btn-sm">Start Over</button>
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
 

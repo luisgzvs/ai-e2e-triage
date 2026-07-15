@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initDynamicLoadingChallenge();
   initRegistrationChallenge();
   initTableChallenge();
+  initCalculatorChallenge();
+  initPasswordStrengthChallenge();
+  initTodoChallenge();
+  initDateChallenge();
+  initWizardChallenge();
 
 });
 
@@ -259,3 +264,220 @@ function escapeHtml(unsafeText) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
+
+/**
+ * Challenge 5: Cart Price Calculator
+ * Bug: Treat discount percentage as a flat dollar amount subtraction.
+ */
+function initCalculatorChallenge() {
+  const form = document.getElementById('calculator-form');
+  const priceInput = document.getElementById('calc-price');
+  const quantityInput = document.getElementById('calc-quantity');
+  const discountInput = document.getElementById('calc-discount');
+  const taxInput = document.getElementById('calc-tax');
+  const summary = document.getElementById('calc-summary');
+  
+  const subtotalText = document.querySelector('[data-testid="calc-subtotal"]');
+  const discountText = document.querySelector('[data-testid="calc-discount-amount"]');
+  const taxText = document.querySelector('[data-testid="calc-tax-amount"]');
+  const totalText = document.querySelector('[data-testid="calc-total"]');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const price = parseFloat(priceInput.value) || 0;
+    const qty = parseInt(quantityInput.value) || 0;
+    const discountVal = parseFloat(discountInput.value) || 0;
+    const taxVal = parseFloat(taxInput.value) || 0;
+
+    const subtotal = price * qty;
+    // BUG: Treat discountVal as a flat rate dollar discount instead of a percentage discount!
+    const discountAmount = discountVal;
+    const discountedSubtotal = subtotal - discountAmount;
+    const taxAmount = discountedSubtotal * (taxVal / 100);
+    const total = discountedSubtotal + taxAmount;
+
+    subtotalText.textContent = `$${subtotal.toFixed(2)}`;
+    discountText.textContent = `$${discountAmount.toFixed(2)}`;
+    taxText.textContent = `$${taxAmount.toFixed(2)}`;
+    totalText.textContent = `$${total.toFixed(2)}`;
+
+    summary.classList.remove('hidden');
+  });
+}
+
+/**
+ * Challenge 6: Password Strength Meter
+ * Bug: Checks length > 8 instead of >= 8.
+ */
+function initPasswordStrengthChallenge() {
+  const passwordInput = document.getElementById('strength-password');
+  const strengthBar = document.getElementById('strength-bar');
+  const strengthText = document.getElementById('strength-text');
+
+  passwordInput.addEventListener('input', () => {
+    const password = passwordInput.value;
+    
+    if (!password) {
+      strengthBar.className = 'strength-bar';
+      strengthBar.style.width = '0%';
+      strengthText.textContent = 'None';
+      strengthText.className = '';
+      return;
+    }
+
+    const hasDigit = /\d/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    // BUG: Off-by-one boundary bug using strictly greater than 8 (> 8) instead of >= 8
+    const isMinLength = password.length > 8;
+
+    if (isMinLength && hasDigit && hasSpecial) {
+      strengthBar.className = 'strength-bar strong';
+      strengthText.textContent = 'Strong';
+      strengthText.className = 'strong-text';
+    } else if (isMinLength && hasDigit) {
+      strengthBar.className = 'strength-bar medium';
+      strengthText.textContent = 'Medium';
+      strengthText.className = 'medium-text';
+    } else {
+      strengthBar.className = 'strength-bar weak';
+      strengthText.textContent = 'Weak';
+      strengthText.className = 'weak-text';
+    }
+  });
+}
+
+/**
+ * Challenge 7: To-Do Planner
+ * Bug: "Clear Completed" filters out active tasks instead of completed ones.
+ */
+function initTodoChallenge() {
+  const form = document.getElementById('todo-form');
+  const input = document.getElementById('todo-input');
+  const list = document.getElementById('todo-list');
+  const clearBtn = document.getElementById('todo-clear-completed');
+
+  let todos = [];
+
+  function renderTodos() {
+    list.innerHTML = '';
+    todos.forEach((todo, idx) => {
+      const li = document.createElement('li');
+      if (todo.completed) li.classList.add('completed');
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = todo.completed;
+      checkbox.setAttribute('data-testid', `todo-check-${idx}`);
+      checkbox.addEventListener('change', () => {
+        todo.completed = checkbox.checked;
+        renderTodos();
+      });
+
+      const span = document.createElement('span');
+      span.textContent = todo.text;
+      span.setAttribute('data-testid', `todo-text-${idx}`);
+
+      li.appendChild(checkbox);
+      li.appendChild(span);
+      list.appendChild(li);
+    });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (text) {
+      todos.push({ text, completed: false });
+      input.value = '';
+      renderTodos();
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    // BUG: Kept completed tasks and removed active tasks!
+    todos = todos.filter(t => t.completed);
+    renderTodos();
+  });
+}
+
+/**
+ * Challenge 8: Date Range Validator
+ * Bug: Checks >= instead of > on start vs end validation.
+ */
+function initDateChallenge() {
+  const startInput = document.getElementById('date-start');
+  const endInput = document.getElementById('date-end');
+  const dateError = document.getElementById('date-error');
+  const dateSuccess = document.getElementById('date-success');
+
+  function validateDates() {
+    const startVal = startInput.value;
+    const endVal = endInput.value;
+
+    if (!startVal || !endVal) {
+      dateError.classList.add('hidden');
+      dateSuccess.classList.add('hidden');
+      return;
+    }
+
+    // BUG: Using >= instead of > (making equal dates trigger the error banner)
+    if (startVal >= endVal) {
+      dateError.classList.remove('hidden');
+      dateSuccess.classList.add('hidden');
+    } else {
+      dateError.classList.add('hidden');
+      dateSuccess.classList.remove('hidden');
+    }
+  }
+
+  startInput.addEventListener('change', validateDates);
+  endInput.addEventListener('change', validateDates);
+}
+
+/**
+ * Challenge 9: Feedback Wizard
+ * Bug: Category dropdown value is read only at initialization instead of at submit.
+ */
+function initWizardChallenge() {
+  const step1 = document.getElementById('wizard-step-1');
+  const step2 = document.getElementById('wizard-step-2');
+  const successState = document.getElementById('wizard-success');
+  const categorySelect = document.getElementById('wizard-category');
+  const commentsInput = document.getElementById('wizard-comments');
+  const nextBtn = document.getElementById('wizard-next');
+  const backBtn = document.getElementById('wizard-back');
+  const submitBtn = document.getElementById('wizard-submit');
+  const summaryText = document.getElementById('wizard-summary');
+  const resetBtn = document.getElementById('wizard-reset');
+
+  // BUG: Read the category dropdown value when the wizard is initialized (first category: Billing)
+  const selectedCategory = categorySelect.options[categorySelect.selectedIndex].text;
+
+  nextBtn.addEventListener('click', () => {
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+  });
+
+  backBtn.addEventListener('click', () => {
+    step2.classList.add('hidden');
+    step1.classList.remove('hidden');
+  });
+
+  submitBtn.addEventListener('click', () => {
+    step2.classList.add('hidden');
+    
+    // BUG: Summary uses the stale variable selectedCategory instead of reading categorySelect.value
+    summaryText.innerHTML = `Thank you for contacting category: <strong>${selectedCategory}</strong>`;
+    
+    successState.classList.remove('hidden');
+  });
+
+  resetBtn.addEventListener('click', () => {
+    commentsInput.value = '';
+    categorySelect.selectedIndex = 0;
+    successState.classList.add('hidden');
+    step1.classList.remove('hidden');
+  });
+}
+
