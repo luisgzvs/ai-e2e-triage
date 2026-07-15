@@ -565,3 +565,92 @@ input::placeholder {
     padding: 40px 0 20px;
   }
 }
+
+/* --- CHALLENGES 5-9 CUSTOM STYLES --- */
+.summary-box {
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  font-size: 0.95rem;
+}
+.summary-box hr {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 12px 0;
+}
+
+.strength-meter {
+  margin-top: 12px;
+}
+.strength-bar-bg {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.strength-bar {
+  height: 100%;
+  width: 0%;
+  transition: var(--transition-smooth);
+}
+.strength-bar.weak {
+  width: 33%;
+  background: var(--error-color);
+}
+.strength-bar.medium {
+  width: 66%;
+  background: #f59e0b; /* Amber */
+}
+.strength-bar.strong {
+  width: 100%;
+  background: var(--success-color);
+}
+.weak-text { color: var(--error-color); }
+.medium-text { color: #f59e0b; }
+.strong-text { color: var(--success-color); }
+.strength-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.todo-input-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 16px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.todo-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.todo-list li.completed span {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+.todo-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.wizard-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
