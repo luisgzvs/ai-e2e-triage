@@ -1,0 +1,48 @@
+name: Playwright Tests CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  schedule:
+    # Run daily at 7:00 AM local time (UTC-6), which corresponds to 1:00 PM UTC (13:00)
+    - cron: '0 13 * * *'
+  workflow_dispatch: # Enable manual run trigger from GitHub actions tab
+
+jobs:
+  e2e-testing:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+
+    - name: Install Monorepo dependencies
+      run: npm ci
+
+    - name: Install Playwright Browsers & Dependencies
+      run: npx playwright install --with-deps
+      working-directory: e2e-tests
+
+    - name: Run E2E Test Suite
+      run: npm run test:e2e
+      env:
+        # Pull sensitive credentials securely from GitHub Repository Secrets
+        VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
+        BASE_URL: http://127.0.0.1:8080
+
+    - name: Upload Playwright HTML Report
+      uses: actions/upload-artifact@v4
+      if: always() # Upload report even if tests fail to debug issues
+      with:
+        name: playwright-report
+        path: e2e-tests/playwright-report/
+        retention-days: 14

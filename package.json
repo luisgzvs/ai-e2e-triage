@@ -1,0 +1,12 @@
+{
+  "name": "e2e-monorepo",
+  "private": true,
+  "workspaces": [
+    "web-app",
+    "e2e-tests"
+  ],
+  "scripts": {
+    "start:app": "npm run start --workspace=web-app",
+    "test:e2e": "npm run test --workspace=e2e-tests"
+  }
+}

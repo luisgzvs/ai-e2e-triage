@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E2E Testing Playground | Test Automation Lab</title>
+  <meta name="description" content="An interactive playground designed specifically for learning and practicing End-to-End (E2E) test automation with Playwright, Cypress, or Selenium.">
+  
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Decorative background elements -->
+  <div class="background-decor" aria-hidden="true"></div>
+  
+  <header class="header">
+    <div class="container">
+      <div class="logo-area">
+        <span class="logo-icon" aria-hidden="true">⚡</span>
+        <h1>E2E Testing <span class="gradient-text">Playground</span></h1>
+      </div>
+      <p class="subtitle">The ultimate environment to train your Playwright, Cypress, or Selenium test scripts.</p>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    
+    <div class="challenges-grid">
+      
+      <!-- CHALLENGE 1: LOGIN FLOW -->
+      <section class="card" id="login-section" data-testid="challenge-login" aria-labelledby="login-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 1</span>
+          <h2 id="login-title">Access Control (Login)</h2>
+          <p>Test authentication flows, input validation states, and asynchronous loading states.</p>
+        </div>
+        <div class="card-body">
+          <!-- Login Form -->
+          <form id="login-form" data-testid="login-form" autocomplete="off" novalidate>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                data-testid="username-input" 
+                placeholder="e.g., admin" 
+                required 
+                aria-required="true"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                data-testid="password-input" 
+                placeholder="e.g., admin123" 
+                required 
+                aria-required="true"
+              >
+            </div>
+            
+            <button type="submit" id="login-submit" data-testid="login-submit-btn" class="btn btn-primary">
+              <span class="btn-text">Log In</span>
+              <span class="spinner hidden" data-testid="login-spinner" aria-hidden="true"></span>
+            </button>
+          </form>
+
+          <!-- Login Success State -->
+          <div 
+            id="login-success-state" 
+            class="success-state hidden" 
+            data-testid="login-success-message" 
+            role="status" 
+            aria-live="polite"
+          >
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <h3>Access Authorized!</h3>
+            <p>You have successfully logged into the testing platform.</p>
+            <button id="logout-btn" data-testid="logout-btn" class="btn btn-secondary">Log Out</button>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div 
+            id="login-error-message" 
+            class="error-message hidden" 
+            data-testid="login-error-message" 
+            role="alert" 
+            aria-live="assertive"
+          >
+            Invalid credentials. Try entering <strong>admin</strong> and <strong>admin123</strong>.
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 2: DYNAMIC LOADING -->
+      <section class="card" id="dynamic-section" data-testid="challenge-dynamic" aria-labelledby="dynamic-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 2</span>
+          <h2 id="dynamic-title">Dynamic Elements</h2>
+          <p>Test asynchronous waiting capacities and dynamic UI updates in your test runner.</p>
+        </div>
+        <div class="card-body">
+          <p class="challenge-desc">Clicking the button below simulates an asynchronous API call with a 3-second network latency before rendering the results.</p>
+          
+          <button id="trigger-dynamic" data-testid="trigger-dynamic-btn" class="btn btn-accent">
+            Simulate API Request
+          </button>
+
+          <!-- Asynchronous Loader -->
+          <div 
+            id="dynamic-loader-wrapper" 
+            class="loader-wrapper hidden" 
+            role="status" 
+            aria-live="polite"
+          >
+            <span class="spinner" data-testid="dynamic-spinner" aria-hidden="true"></span>
+            <p>Fetching server data...</p>
+          </div>
+
+          <!-- Dynamic Result Box -->
+          <div 
+            id="dynamic-content" 
+            class="dynamic-result hidden" 
+            data-testid="dynamic-result-box" 
+            role="region" 
+            aria-live="polite"
+          >
+            <h4>🎉 Data Loaded Successfully!</h4>
+            <p>This block appeared dynamically after a 3-second delay. Response Status: <code data-testid="dynamic-status-code">200 OK</code>.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 3: COMPLEX FORM -->
+      <section class="card" id="form-section" data-testid="challenge-form" aria-labelledby="form-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 3</span>
+          <h2 id="form-title">Registration Form</h2>
+          <p>Fill out complex field types and trigger various validation rules.</p>
+        </div>
+        <div class="card-body">
+          <!-- Registration Form -->
+          <form id="register-form" data-testid="register-form" novalidate>
+            <div class="form-group">
+              <label for="reg-email">Email Address</label>
+              <input 
+                type="email" 
+                id="reg-email" 
+                name="email" 
+                data-testid="reg-email-input" 
+                placeholder="user@example.com" 
+                required 
+                aria-required="true"
+                aria-describedby="email-error-text"
+              >
+              <span class="error-text hidden" id="email-error-text" data-testid="email-error-text">Please enter a valid email address.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="reg-role">Preferred Role</label>
+              <select 
+                id="reg-role" 
+                name="role" 
+                data-testid="reg-role-select" 
+                required 
+                aria-required="true"
+                aria-describedby="role-error-text"
+              >
+                <option value="">Choose a role...</option>
+                <option value="developer">Developer</option>
+                <option value="tester">QA Specialist</option>
+                <option value="manager">Product Owner</option>
+              </select>
+              <span class="error-text hidden" id="role-error-text" data-testid="role-error-text">Please select a role option.</span>
+            </div>
+
+            <div class="form-group">
+              <label id="subscription-plan-label">Subscription Plan</label>
+              <div class="radio-group" role="radiogroup" aria-labelledby="subscription-plan-label">
+                <label class="radio-label">
+                  <input type="radio" name="plan" value="free" data-testid="plan-free-radio" checked>
+                  <span>Free Tier</span>
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="plan" value="premium" data-testid="plan-premium-radio">
+                  <span>Premium (Pro)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input 
+                  type="checkbox" 
+                  id="reg-terms" 
+                  name="terms" 
+                  data-testid="reg-terms-checkbox" 
+                  required 
+                  aria-required="true"
+                  aria-describedby="terms-error-text"
+                >
+                <span>I accept the test terms and conditions.</span>
+              </label>
+              <span class="error-text hidden" id="terms-error-text" data-testid="terms-error-text">You must agree to the terms to proceed.</span>
+            </div>
+
+            <button type="submit" id="register-submit" data-testid="register-submit-btn" class="btn btn-primary">
+              Register Account
+            </button>
+          </form>
+
+          <!-- Register Success State -->
+          <div 
+            id="register-success" 
+            class="success-state hidden" 
+            data-testid="register-success-msg" 
+            role="status" 
+            aria-live="polite"
+          >
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <h3>Registration Complete</h3>
+            <p id="register-summary-text" data-testid="register-summary-text">Thank you! Your testing account has been registered.</p>
+            <button id="reset-register-btn" data-testid="reset-register-btn" class="btn btn-secondary btn-sm">Reset Form</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHALLENGE 4: INTERACTIVE TABLE -->
+      <section class="card wide-card" id="table-section" data-testid="challenge-table" aria-labelledby="table-title">
+        <div class="card-header">
+          <span class="challenge-badge">Challenge 4</span>
+          <h2 id="table-title">Data Table & Live Filters</h2>
+          <p>Perform real-time searches and filter validation across tabular datasets.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-controls">
+            <input 
+              type="text" 
+              id="search-input" 
+              data-testid="table-search-input" 
+              placeholder="Search by name or role..."
+              aria-label="Search users table"
+            >
+            <select id="filter-status" data-testid="table-status-filter" aria-label="Filter users by status">
+              <option value="all">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" data-testid="users-table">
+              <thead>
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Registration Date</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- Injected dynamically by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div 
+            id="table-empty-message" 
+            class="empty-message hidden" 
+            data-testid="table-empty-msg" 
+            role="status" 
+            aria-live="polite"
+          >
+            No users matched your query.
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 E2E Testing Playground. Crafted with 💜 for automated testing verification.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
