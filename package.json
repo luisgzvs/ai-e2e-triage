@@ -3,10 +3,13 @@
   "private": true,
   "workspaces": [
     "web-app",
-    "e2e-tests"
+    "e2e-tests",
+    "e2e-triage-app"
   ],
   "scripts": {
     "start:app": "npm run start --workspace=web-app",
-    "test:e2e": "npm run test --workspace=e2e-tests"
+    "test:e2e": "npm run test --workspace=e2e-tests",
+    "start:triage": "npm run dev --workspace=e2e-triage-app",
+    "triage": "npm run test:e2e; npx playwright show-report e2e-tests/playwright-report --port 9323 & npm run start:triage"
   }
 }
