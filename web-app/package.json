@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "http-server . -p 8080 -c-1"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "start": "npm run build && http-server . -p 8080 -c-1"
   },
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "typescript": "^5.4.5"
   }
 }

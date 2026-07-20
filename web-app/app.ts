@@ -1,9 +1,21 @@
 /**
- * E2E Testing Playground - Application Logic
+ * E2E Testing Playground - Application Logic (TypeScript)
  * Implements interactive modules for E2E validation challenges.
  */
+
+interface User {
+  name: string;
+  role: string;
+  status: 'active' | 'inactive';
+  date: string;
+}
+
+interface Todo {
+  text: string;
+  completed: boolean;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  
   // Initialize all playground challenges
   initLoginChallenge();
   initDynamicLoadingChallenge();
@@ -14,28 +26,31 @@ document.addEventListener('DOMContentLoaded', () => {
   initTodoChallenge();
   initDateChallenge();
   initWizardChallenge();
-
 });
 
 /**
  * Challenge 1: Login Form controller
  * Simulates authentication logic with loading states.
  */
-function initLoginChallenge() {
-  const loginForm = document.getElementById('login-form');
-  const loginSubmit = document.getElementById('login-submit');
-  const loginSpinner = loginForm.querySelector('[data-testid="login-spinner"]');
-  const loginSuccessState = document.getElementById('login-success-state');
-  const loginErrorMessage = document.getElementById('login-error-message');
-  const logoutBtn = document.getElementById('logout-btn');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
+function initLoginChallenge(): void {
+  const loginForm = document.getElementById('login-form') as HTMLFormElement | null;
+  const loginSubmit = document.getElementById('login-submit') as HTMLButtonElement | null;
+  const loginSpinner = loginForm?.querySelector('[data-testid="login-spinner"]') as HTMLElement | null;
+  const loginSuccessState = document.getElementById('login-success-state') as HTMLElement | null;
+  const loginErrorMessage = document.getElementById('login-error-message') as HTMLElement | null;
+  const logoutBtn = document.getElementById('logout-btn') as HTMLButtonElement | null;
+  const usernameInput = document.getElementById('username') as HTMLInputElement | null;
+  const passwordInput = document.getElementById('password') as HTMLInputElement | null;
+
+  if (!loginForm || !loginSubmit || !loginSpinner || !loginSuccessState || !loginErrorMessage || !logoutBtn || !usernameInput || !passwordInput) {
+    return;
+  }
 
   // Hardcoded test credentials
   const VALID_USER = 'admin';
   const VALID_PASS = 'admin123';
 
-  loginForm.addEventListener('submit', (event) => {
+  loginForm.addEventListener('submit', (event: SubmitEvent) => {
     event.preventDefault();
     
     // Clear previous error and activate loading state
@@ -71,10 +86,14 @@ function initLoginChallenge() {
  * Challenge 2: Dynamic Element Loading controller
  * Simulates network loading latency for async assertions in test runs.
  */
-function initDynamicLoadingChallenge() {
-  const triggerDynamicBtn = document.getElementById('trigger-dynamic');
-  const dynamicLoaderWrapper = document.getElementById('dynamic-loader-wrapper');
-  const dynamicContent = document.getElementById('dynamic-content');
+function initDynamicLoadingChallenge(): void {
+  const triggerDynamicBtn = document.getElementById('trigger-dynamic') as HTMLButtonElement | null;
+  const dynamicLoaderWrapper = document.getElementById('dynamic-loader-wrapper') as HTMLElement | null;
+  const dynamicContent = document.getElementById('dynamic-content') as HTMLElement | null;
+
+  if (!triggerDynamicBtn || !dynamicLoaderWrapper || !dynamicContent) {
+    return;
+  }
 
   triggerDynamicBtn.addEventListener('click', () => {
     // Reset view to loading state
@@ -95,24 +114,29 @@ function initDynamicLoadingChallenge() {
  * Challenge 3: Registration Form controller
  * Checks input validation rules and outputs summary feedback.
  */
-function initRegistrationChallenge() {
-  const registerForm = document.getElementById('register-form');
-  const registerSuccess = document.getElementById('register-success');
-  const registerSummaryText = document.getElementById('register-summary-text');
-  const resetRegisterBtn = document.getElementById('reset-register-btn');
+function initRegistrationChallenge(): void {
+  const registerForm = document.getElementById('register-form') as HTMLFormElement | null;
+  const registerSuccess = document.getElementById('register-success') as HTMLElement | null;
+  const registerSummaryText = document.getElementById('register-summary-text') as HTMLElement | null;
+  const resetRegisterBtn = document.getElementById('reset-register-btn') as HTMLButtonElement | null;
 
-  const emailInput = document.getElementById('reg-email');
-  const roleSelect = document.getElementById('reg-role');
-  const termsCheckbox = document.getElementById('reg-terms');
+  const emailInput = document.getElementById('reg-email') as HTMLInputElement | null;
+  const roleSelect = document.getElementById('reg-role') as HTMLSelectElement | null;
+  const termsCheckbox = document.getElementById('reg-terms') as HTMLInputElement | null;
 
-  const emailError = document.getElementById('email-error-text');
-  const roleError = document.getElementById('role-error-text');
-  const termsError = document.getElementById('terms-error-text');
+  const emailError = document.getElementById('email-error-text') as HTMLElement | null;
+  const roleError = document.getElementById('role-error-text') as HTMLElement | null;
+  const termsError = document.getElementById('terms-error-text') as HTMLElement | null;
+
+  if (!registerForm || !registerSuccess || !registerSummaryText || !resetRegisterBtn ||
+      !emailInput || !roleSelect || !termsCheckbox || !emailError || !roleError || !termsError) {
+    return;
+  }
 
   // RFC 5322 Standard email validation regex
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  registerForm.addEventListener('submit', (event) => {
+  registerForm.addEventListener('submit', (event: SubmitEvent) => {
     event.preventDefault();
     let isFormValid = true;
 
@@ -152,9 +176,10 @@ function initRegistrationChallenge() {
 
     // Display success summary if all validation passes
     if (isFormValid) {
-      const selectedPlan = document.querySelector('input[name="plan"]:checked').value;
+      const selectedPlanInput = document.querySelector('input[name="plan"]:checked') as HTMLInputElement | null;
+      const selectedPlan = selectedPlanInput ? selectedPlanInput.value : '';
       const planLabel = selectedPlan === 'premium' ? 'Premium (Pro)' : 'Free Tier';
-      const roleLabel = roleSelect.options[roleSelect.selectedIndex].text;
+      const roleLabel = roleSelect.options[roleSelect.selectedIndex]?.text || '';
 
       registerSummaryText.innerHTML = `Registration complete for <strong>${escapeHtml(emailInput.value)}</strong>. Assigned role: <strong>${roleLabel}</strong> on the <strong>${planLabel}</strong> subscription.`;
       
@@ -187,8 +212,8 @@ function initRegistrationChallenge() {
  * Challenge 4: User Directory Live Table controller
  * Handles client-side dataset searching and filtering.
  */
-function initTableChallenge() {
-  const INITIAL_USERS = [
+function initTableChallenge(): void {
+  const INITIAL_USERS: User[] = [
     { name: 'Alice Smith', role: 'Developer', status: 'active', date: '2026-01-10' },
     { name: 'Bob Jones', role: 'QA Specialist', status: 'active', date: '2026-02-15' },
     { name: 'Charlie Brown', role: 'Product Owner', status: 'inactive', date: '2025-11-20' },
@@ -197,12 +222,17 @@ function initTableChallenge() {
     { name: 'Fiona Gallagher', role: 'Developer', status: 'active', date: '2026-06-18' }
   ];
 
-  const tableBody = document.getElementById('table-body');
-  const searchInput = document.getElementById('search-input');
-  const filterStatus = document.getElementById('filter-status');
-  const tableEmptyMessage = document.getElementById('table-empty-message');
+  const tableBody = document.getElementById('table-body') as HTMLTableSectionElement | null;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+  const filterStatus = document.getElementById('filter-status') as HTMLSelectElement | null;
+  const tableEmptyMessage = document.getElementById('table-empty-message') as HTMLElement | null;
 
-  function renderTable(users) {
+  if (!tableBody || !searchInput || !filterStatus || !tableEmptyMessage) {
+    return;
+  }
+
+  function renderTable(users: User[]): void {
+    if (!tableBody || !tableEmptyMessage) return;
     tableBody.innerHTML = '';
     
     if (users.length === 0) {
@@ -233,7 +263,8 @@ function initTableChallenge() {
     });
   }
 
-  function handleFilterChange() {
+  function handleFilterChange(): void {
+    if (!searchInput || !filterStatus) return;
     const query = searchInput.value.toLowerCase().trim();
     const statusFilter = filterStatus.value;
 
@@ -256,7 +287,7 @@ function initTableChallenge() {
 /**
  * Escapes characters to prevent XSS injection attacks in tabular summaries.
  */
-function escapeHtml(unsafeText) {
+function escapeHtml(unsafeText: string): string {
   return unsafeText
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -269,23 +300,28 @@ function escapeHtml(unsafeText) {
  * Challenge 5: Cart Price Calculator
  * Bug: Treat discount percentage as a flat dollar amount subtraction.
  */
-function initCalculatorChallenge() {
-  const form = document.getElementById('calculator-form');
-  const priceInput = document.getElementById('calc-price');
-  const quantityInput = document.getElementById('calc-quantity');
-  const discountInput = document.getElementById('calc-discount');
-  const taxInput = document.getElementById('calc-tax');
-  const summary = document.getElementById('calc-summary');
+function initCalculatorChallenge(): void {
+  const form = document.getElementById('calculator-form') as HTMLFormElement | null;
+  const priceInput = document.getElementById('calc-price') as HTMLInputElement | null;
+  const quantityInput = document.getElementById('calc-quantity') as HTMLInputElement | null;
+  const discountInput = document.getElementById('calc-discount') as HTMLInputElement | null;
+  const taxInput = document.getElementById('calc-tax') as HTMLInputElement | null;
+  const summary = document.getElementById('calc-summary') as HTMLElement | null;
   
-  const subtotalText = document.querySelector('[data-testid="calc-subtotal"]');
-  const discountText = document.querySelector('[data-testid="calc-discount-amount"]');
-  const taxText = document.querySelector('[data-testid="calc-tax-amount"]');
-  const totalText = document.querySelector('[data-testid="calc-total"]');
+  const subtotalText = document.querySelector('[data-testid="calc-subtotal"]') as HTMLElement | null;
+  const discountText = document.querySelector('[data-testid="calc-discount-amount"]') as HTMLElement | null;
+  const taxText = document.querySelector('[data-testid="calc-tax-amount"]') as HTMLElement | null;
+  const totalText = document.querySelector('[data-testid="calc-total"]') as HTMLElement | null;
 
-  form.addEventListener('submit', (e) => {
+  if (!form || !priceInput || !quantityInput || !discountInput || !taxInput || !summary ||
+      !subtotalText || !discountText || !taxText || !totalText) {
+    return;
+  }
+
+  form.addEventListener('submit', (e: SubmitEvent) => {
     e.preventDefault();
     const price = parseFloat(priceInput.value) || 0;
-    const qty = parseInt(quantityInput.value) || 0;
+    const qty = parseInt(quantityInput.value, 10) || 0;
     const discountVal = parseFloat(discountInput.value) || 0;
     const taxVal = parseFloat(taxInput.value) || 0;
 
@@ -309,10 +345,14 @@ function initCalculatorChallenge() {
  * Challenge 6: Password Strength Meter
  * Bug: Checks length > 8 instead of >= 8.
  */
-function initPasswordStrengthChallenge() {
-  const passwordInput = document.getElementById('strength-password');
-  const strengthBar = document.getElementById('strength-bar');
-  const strengthText = document.getElementById('strength-text');
+function initPasswordStrengthChallenge(): void {
+  const passwordInput = document.getElementById('strength-password') as HTMLInputElement | null;
+  const strengthBar = document.getElementById('strength-bar') as HTMLElement | null;
+  const strengthText = document.getElementById('strength-text') as HTMLElement | null;
+
+  if (!passwordInput || !strengthBar || !strengthText) {
+    return;
+  }
 
   passwordInput.addEventListener('input', () => {
     const password = passwordInput.value;
@@ -351,15 +391,20 @@ function initPasswordStrengthChallenge() {
  * Challenge 7: To-Do Planner
  * Bug: "Clear Completed" filters out active tasks instead of completed ones.
  */
-function initTodoChallenge() {
-  const form = document.getElementById('todo-form');
-  const input = document.getElementById('todo-input');
-  const list = document.getElementById('todo-list');
-  const clearBtn = document.getElementById('todo-clear-completed');
+function initTodoChallenge(): void {
+  const form = document.getElementById('todo-form') as HTMLFormElement | null;
+  const input = document.getElementById('todo-input') as HTMLInputElement | null;
+  const list = document.getElementById('todo-list') as HTMLUListElement | null;
+  const clearBtn = document.getElementById('todo-clear-completed') as HTMLButtonElement | null;
 
-  let todos = [];
+  if (!form || !input || !list || !clearBtn) {
+    return;
+  }
 
-  function renderTodos() {
+  let todos: Todo[] = [];
+
+  function renderTodos(): void {
+    if (!list) return;
     list.innerHTML = '';
     todos.forEach((todo, idx) => {
       const li = document.createElement('li');
@@ -384,7 +429,7 @@ function initTodoChallenge() {
     });
   }
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', (e: SubmitEvent) => {
     e.preventDefault();
     const text = input.value.trim();
     if (text) {
@@ -405,13 +450,18 @@ function initTodoChallenge() {
  * Challenge 8: Date Range Validator
  * Bug: Checks >= instead of > on start vs end validation.
  */
-function initDateChallenge() {
-  const startInput = document.getElementById('date-start');
-  const endInput = document.getElementById('date-end');
-  const dateError = document.getElementById('date-error');
-  const dateSuccess = document.getElementById('date-success');
+function initDateChallenge(): void {
+  const startInput = document.getElementById('date-start') as HTMLInputElement | null;
+  const endInput = document.getElementById('date-end') as HTMLInputElement | null;
+  const dateError = document.getElementById('date-error') as HTMLElement | null;
+  const dateSuccess = document.getElementById('date-success') as HTMLElement | null;
 
-  function validateDates() {
+  if (!startInput || !endInput || !dateError || !dateSuccess) {
+    return;
+  }
+
+  function validateDates(): void {
+    if (!startInput || !endInput || !dateError || !dateSuccess) return;
     const startVal = startInput.value;
     const endVal = endInput.value;
 
@@ -439,20 +489,25 @@ function initDateChallenge() {
  * Challenge 9: Feedback Wizard
  * Bug: Category dropdown value is read only at initialization instead of at submit.
  */
-function initWizardChallenge() {
-  const step1 = document.getElementById('wizard-step-1');
-  const step2 = document.getElementById('wizard-step-2');
-  const successState = document.getElementById('wizard-success');
-  const categorySelect = document.getElementById('wizard-category');
-  const commentsInput = document.getElementById('wizard-comments');
-  const nextBtn = document.getElementById('wizard-next');
-  const backBtn = document.getElementById('wizard-back');
-  const submitBtn = document.getElementById('wizard-submit');
-  const summaryText = document.getElementById('wizard-summary');
-  const resetBtn = document.getElementById('wizard-reset');
+function initWizardChallenge(): void {
+  const step1 = document.getElementById('wizard-step-1') as HTMLElement | null;
+  const step2 = document.getElementById('wizard-step-2') as HTMLElement | null;
+  const successState = document.getElementById('wizard-success') as HTMLElement | null;
+  const categorySelect = document.getElementById('wizard-category') as HTMLSelectElement | null;
+  const commentsInput = document.getElementById('wizard-comments') as HTMLInputElement | null;
+  const nextBtn = document.getElementById('wizard-next') as HTMLButtonElement | null;
+  const backBtn = document.getElementById('wizard-back') as HTMLButtonElement | null;
+  const submitBtn = document.getElementById('wizard-submit') as HTMLButtonElement | null;
+  const summaryText = document.getElementById('wizard-summary') as HTMLElement | null;
+  const resetBtn = document.getElementById('wizard-reset') as HTMLButtonElement | null;
+
+  if (!step1 || !step2 || !successState || !categorySelect || !commentsInput ||
+      !nextBtn || !backBtn || !submitBtn || !summaryText || !resetBtn) {
+    return;
+  }
 
   // BUG: Read the category dropdown value when the wizard is initialized (first category: Billing)
-  const selectedCategory = categorySelect.options[categorySelect.selectedIndex].text;
+  const selectedCategory = categorySelect.options[categorySelect.selectedIndex]?.text || '';
 
   nextBtn.addEventListener('click', () => {
     step1.classList.add('hidden');
@@ -480,4 +535,3 @@ function initWizardChallenge() {
     step1.classList.remove('hidden');
   });
 }
-

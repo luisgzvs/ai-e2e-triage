@@ -24,3 +24,7 @@ yarn-error.log*
 # System Files
 .DS_Store
 Thumbs.db
+
+# Build artifacts
+web-app/app.js
+
